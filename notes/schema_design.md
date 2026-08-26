@@ -2,7 +2,7 @@ dev insights stores data from different github api endpoints... users,repositori
 
 users- holds unique id pk,login,users name, and number of repos 
 
-repositories- holds unique id, user_id(foreign key linking to users),name of repo,primary language of repo, and when it was pushed 
+repositories- holds unique id, user_id ,name of repo, primary language of repo, and when it was pushed 
 
 repository_languages-holds repository_id(foreign key links to repository),language and bytes used for each.
 
@@ -18,13 +18,12 @@ datetimes stored as real datetime objects to prevent sloppy date strings/corrupt
 
 started with sqlite to quickly get set up and built using ORM(SQLAlchemy) to make it easier to transition to postgres at a later time. writing raw sql instead wopuld have meant alll the queries would have to be redone when switching as different databases have slightly different syntax for sql
 
-foreign key repositories.user_id maps back to users.id. one user can have many repositories.
 
 foreign key repository_languages.repository_id maps to repositories_id. many languages to one repository
 
 trade offs:
 
-soft reference on event.repo_id gives up referential integrity, databsae no longer guarentees that an events repo_id points to a real stored repo, so some events dangle
+soft references on event.repo_id and repository.user_id give up referential integrity so the database no longer guarantees that an event's repo_id points to a real stored repo, or that a repository's user_id points to a real stored user. so some of these references dangle, pointing at ids that were never stored.
 
 SQLite+ORM - the swap to postgres will require insert functions to change to postgres equivlent
 
