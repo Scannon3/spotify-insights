@@ -30,7 +30,7 @@ def require_dashboard_auth(credentials: HTTPBasicCredentials = Depends(security)
             headers={"WWW-Authenticate": "Basic"},
         )
 
-app.get("/dashboard", response_class=HTMLResponse,
+@app.get("/dashboard", response_class=HTMLResponse,
          dependencies=[Depends(require_dashboard_auth)])
 def dashboard(session: Session = Depends(get_db)):
     repos = session.execute(
